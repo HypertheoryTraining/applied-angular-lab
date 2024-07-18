@@ -10,9 +10,9 @@ export const UserFeature = createFeature({
   name: 'User Feature',
   reducer: createReducer(
     initialState,
-    on(UserActions.userLoaded, (_, action) => action.payload),
+    on(UserActions.userLoaded, (_, action) => action.payload)
   ),
   extraSelectors: ({ selectSub }) => ({
-    selectUserLoaded: createSelector(selectSub, (sub) => sub !== ''),
+    selectUserLoaded: createSelector(selectSub, sub => sub !== ''),
   }),
 });

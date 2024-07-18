@@ -15,7 +15,7 @@ async function prepareApp() {
 }
 
 prepareApp().then(() => {
-  bootstrapApplication(AppComponent, appConfig).catch((err) =>
-    console.error(err),
+  bootstrapApplication(AppComponent, appConfig).catch(err =>
+    console.error(err)
   );
 });

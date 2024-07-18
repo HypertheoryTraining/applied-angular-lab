@@ -55,16 +55,16 @@ export const UiStateFeature = createFeature({
   reducer: createReducer(
     initialState,
     on(UiStateEvents.navigation, (s, { payload }) =>
-      handleNavigatonStart(s, payload),
+      handleNavigatonStart(s, payload)
     ),
     on(UiStateEvents.navigationEnd, (s, { payload }) =>
-      handleNavigationEnd(s, payload),
-    ),
+      handleNavigationEnd(s, payload)
+    )
   ),
 
   extraSelectors: ({ selectUser, selectUserSoftware }) => ({
-    selectUserModes: createSelector(selectUser, (u) => getModes(u)),
-    selectSoftwareModes: createSelector(selectUserSoftware, (u) => getModes(u)),
+    selectUserModes: createSelector(selectUser, u => getModes(u)),
+    selectSoftwareModes: createSelector(selectUserSoftware, u => getModes(u)),
   }),
 });
 
@@ -95,12 +95,12 @@ const fetchingStateMode: UiStateModes = {
 };
 function getModes(state: UiStateModes): ModeKeys[] {
   return Object.keys(state).filter(
-    (m) => state[m as unknown as ModeKeys] === true,
+    m => state[m as unknown as ModeKeys] === true
   ) as unknown as ModeKeys[];
 }
 function handleNavigatonStart(
   state: UiState,
-  a: NavigationStartPayload,
+  a: NavigationStartPayload
 ): UiState {
   if (a.method === HttpMethods.GET && a.url === '/api/user') {
     return {

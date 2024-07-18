@@ -14,14 +14,14 @@ export class DashboardNavigationEffect {
         ofType(UserActions.userLoaded),
         tap(() => {
           this.router.navigateByUrl(redirectTo);
-        }),
+        })
       );
     },
-    { dispatch: false },
+    { dispatch: false }
   );
 
   constructor(
     private actions$: Actions,
-    private router: Router,
+    private router: Router
   ) {}
 }

@@ -31,7 +31,7 @@ import { ModeKeys, UiStateFeature } from '../../state/ui-state';
 })
 export class CreateIssuesComponent {
   softwareModes = inject(Store).selectSignal(
-    UiStateFeature.selectSoftwareModes,
+    UiStateFeature.selectSoftwareModes
   );
 
   isMode(mode: ModeKeys) {

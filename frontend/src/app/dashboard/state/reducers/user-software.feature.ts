@@ -31,7 +31,7 @@ export const UserSoftwareFeature = createFeature({
     on(SoftwareListActions.listFilteredBy, (s, { payload }) => ({
       ...s,
       titleFilter: payload,
-    })),
+    }))
   ),
   extraSelectors: ({ selectList, selectTitleFilter }) => {
     return {
@@ -42,10 +42,10 @@ export const UserSoftwareFeature = createFeature({
           if (!filter) {
             return list;
           }
-          const results = fuzzySearch(filter).map((r) => r.item);
+          const results = fuzzySearch(filter).map(r => r.item);
 
           return results as unknown as SoftwareItem[];
-        },
+        }
       ),
     };
   },

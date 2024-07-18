@@ -1,9 +1,8 @@
-import { Component, effect } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { Store } from '@ngrx/store';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { UserActions } from './state/user/actions';
-import { UserFeature } from './state/user/user-feature';
 
 @Component({
   selector: 'app-root',

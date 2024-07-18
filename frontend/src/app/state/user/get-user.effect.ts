@@ -12,9 +12,9 @@ export const loadUser = createEffect(
       switchMap(() =>
         service
           .getUser()
-          .pipe(map((user) => UserActions.userLoaded({ payload: user }))),
-      ),
+          .pipe(map(user => UserActions.userLoaded({ payload: user })))
+      )
     );
   },
-  { functional: true },
+  { functional: true }
 );

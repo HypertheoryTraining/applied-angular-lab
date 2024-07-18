@@ -15,8 +15,7 @@ import { Component } from '@angular/core';
         style=""
         frameBorder="0"
         class="giphy-embed"
-        allowFullScreen
-      ></iframe>
+        allowFullScreen></iframe>
       <p>
         <a
           href="https://giphy.com/stickers/justin-transparent-h2ZHafpzqVXssKkBbt"

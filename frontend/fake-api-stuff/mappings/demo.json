@@ -1,0 +1,9 @@
+{
+  "request": {
+    "urlPath": "http://api.company.com",
+    "method": "GET"
+  },
+  "response": {
+    "jsonBody": {}
+  }
+}

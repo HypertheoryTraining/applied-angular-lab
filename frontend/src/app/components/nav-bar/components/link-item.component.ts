@@ -1,14 +1,18 @@
 import { Component, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NavItem } from '../models';
 
 @Component({
   selector: 'app-link-item',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   template: `
     <li>
-      <a [routerLink]="link().link">{{ link().label }}</a>
+      <a
+        [routerLinkActive]="['font-bold', 'border-b-2']"
+        [routerLink]="link().link"
+        >{{ link().label }}</a
+      >
     </li>
   `,
   styles: ``,

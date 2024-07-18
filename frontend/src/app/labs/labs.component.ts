@@ -1,16 +1,18 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { JsonPipe } from '@angular/common';
-import { map } from 'rxjs';
+import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { LinkDirective } from '../directives/link.directive';
 @Component({
   selector: 'app-labs',
   standalone: true,
-  imports: [RouterOutlet, JsonPipe],
+  imports: [RouterOutlet, JsonPipe, LinkDirective, RouterLink],
   template: `
     <h2>Labs for Applied Angular</h2>
-
+    <ul>
+      <li><a appLink routerLink="counter">Counter</a></li>
+      <li><a appLink routerLink="prefs">Preferences</a></li>
+      <li><a appLink routerLink="books">Books</a></li>
+    </ul>
     <router-outlet></router-outlet>
   `,
   styles: ``,
