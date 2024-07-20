@@ -42,6 +42,7 @@ export class BooksComponent {
 
   summary = computed(() => {
     const initialState: Record<string, number> = {};
+    const group = Map.groupBy(this.books(), book => book.author);
     //  const earliest = this.books()?.reduce(n,p => )
     // const result = this.books()?.reduce((state, next) => {}, initialState);
   });
