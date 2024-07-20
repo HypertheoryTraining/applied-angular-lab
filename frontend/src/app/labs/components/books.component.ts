@@ -26,6 +26,20 @@ import { map } from 'rxjs';
         }
       </tbody>
     </table>
+    <table>
+      <thead>
+        <td>Century</td>
+        <td>Number of Books</td>
+      </thead>
+      <tbody>
+        @for (book of summary(); track $index) {
+          <tr>
+            <td>{{ book.century }}th</td>
+            <td>{{ book.books }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
   `,
   styles: ``,
 })
@@ -35,15 +49,39 @@ export class BooksComponent {
   books = toSignal(
     this.client
       .get<{
-        data: { id: string; title: string; author: string; year: string }[];
+        data: { id: string; title: string; author: string; year: number }[];
       }>('/api/books')
       .pipe(map(r => r.data))
   );
 
   summary = computed(() => {
-    const initialState: Record<string, number> = {};
-    const group = Map.groupBy(this.books(), book => book.author);
-    //  const earliest = this.books()?.reduce(n,p => )
-    // const result = this.books()?.reduce((state, next) => {}, initialState);
+    let initialS: Record<string, number> = {};
+    const cents =
+      this.books()
+        ?.map(b => Math.ceil(b.year / 100))
+        .toSorted()
+        .map(c => c.toString()) || [];
+    const initialState: Record<string, number> = cents.reduce(
+      (lhs, rhs) => ({ ...lhs, [rhs]: 0 }),
+      initialS
+    );
+    const centuries =
+      this.books()
+        ?.map(b => ({
+          century: Math.ceil(b.year / 100),
+          count: 1,
+        }))
+        .reduce((lhs, rhs) => {
+          return { ...lhs, [rhs.century]: (lhs[rhs.century] || 0) + 1 };
+        }, initialState) || [];
+
+    return Object.entries(centuries)
+      .sort(a => +[a[0]])
+      .map(c => ({ century: c[0], books: c[1] }));
   });
+}
+
+function range(start: number, end: number): number[] {
+  if (start === end) return [start];
+  return [start, ...range(start + 1, end)];
 }
