@@ -91,10 +91,8 @@ export const BooksFeature = createFeature({
       _selectSortedBooks,
       selectPageSize,
       selectCurrentPage,
-      selectSortingBy,
-      selectSortDirection,
 
-      (books, pageSize, currentPage, sortingBy, direction) => {
+      (books, pageSize, currentPage) => {
         switch (pageSize) {
           case 'all':
             return books;
