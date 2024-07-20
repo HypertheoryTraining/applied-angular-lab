@@ -24,7 +24,11 @@ export class BooksEffects {
           tap(
             payload =>
               (this.#fuzzySearch = createFuzzySearch(payload, {
-                getText: item => [item.title, item.author],
+                getText: item => [
+                  item.title,
+                  item.author,
+                  item.year.toString(),
+                ],
               }))
           ),
           map(payload => BookActions.books({ payload }))
@@ -53,4 +57,10 @@ export class BooksEffects {
     },
     { dispatch: true }
   );
+  clearFilter = createEffect(() => {
+    return this.#actions$.pipe(
+      ofType(BookActions.clearFilter),
+      map(() => BookActions.books({ payload: this.#cachedUnFiltered }))
+    );
+  });
 }

@@ -7,6 +7,10 @@ type BooksState = {
   pageSize: BooksPageSize;
   currentPage: number;
   numberOfBooks: number;
+  _cachedSettings: {
+    currentPage: number;
+    pageSize: BooksPageSize;
+  } | null;
 };
 
 const initialState: BooksState = {
@@ -14,6 +18,7 @@ const initialState: BooksState = {
   pageSize: 5,
   currentPage: 0,
   numberOfBooks: 0,
+  _cachedSettings: null,
 };
 
 export const BooksFeature = createFeature({
@@ -24,6 +29,17 @@ export const BooksFeature = createFeature({
       ...s,
       books: a.payload,
       numberOfBooks: a.payload.length,
+    })),
+    on(BookActions.setFilter, s => ({
+      ...s,
+      _cachedSettings: { currentPage: s.currentPage, pageSize: s.pageSize },
+      currentPage: 0,
+      pageSize: 'all' as unknown as BooksPageSize,
+    })),
+    on(BookActions.clearFilter, s => ({
+      ...s,
+      pageSize: s._cachedSettings?.pageSize || 'all',
+      currentPage: s._cachedSettings?.currentPage || 0,
     })),
     on(BookActions.setPageSize, (s, a) => ({
       ...s,
@@ -36,7 +52,12 @@ export const BooksFeature = createFeature({
       currentPage: s.currentPage - 1,
     }))
   ),
-  extraSelectors: ({ selectBooks, selectPageSize, selectCurrentPage }) => ({
+  extraSelectors: ({
+    selectBooks,
+    selectPageSize,
+    selectCurrentPage,
+    selectNumberOfBooks,
+  }) => ({
     selectPagedBooks: createSelector(
       selectBooks,
       selectPageSize,
@@ -66,12 +87,13 @@ export const BooksFeature = createFeature({
       selectCurrentPage,
       selectPageSize,
       selectBooks,
-      (currentPage, pageSize, { length }) => {
+      selectNumberOfBooks,
+      (currentPage, pageSize, { length }, count) => {
         if (pageSize === 'all') {
           return 1;
         }
         const totalPages = length / pageSize;
-        return `Page ${currentPage + 1} of ${totalPages}`;
+        return `Page ${currentPage + 1} of ${totalPages} (${count} books)`;
       }
     ),
   }),
