@@ -1,6 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { BookItem } from '../services/books.service';
-import { BooksPageSize } from './books.feature';
+import { BookSortDirection, BookSortkey, BooksPageSize } from './books.feature';
 
 export const BookActions = createActionGroup({
   source: 'Books Feature - Actions',
@@ -12,5 +12,6 @@ export const BookActions = createActionGroup({
     'Previous Page': emptyProps(),
     'Set Filter': props<{ payload: string }>(),
     'Clear Filter': emptyProps(),
+    'Set Sort': props<{ by: BookSortkey; direction: BookSortDirection }>(),
   },
 });

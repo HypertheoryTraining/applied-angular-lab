@@ -2,6 +2,7 @@ import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { BookItem } from '../services/books.service';
 import { BookActions } from './books.actions';
 export type BooksPageSize = 5 | 10 | 25 | 'all';
+export type BookSortDirection = 'asc' | 'desc';
 export type BookSortkey = keyof BookItem;
 type BooksState = {
   books: BookItem[];
@@ -9,6 +10,7 @@ type BooksState = {
   currentPage: number;
   numberOfBooks: number;
   sortingBy: BookSortkey;
+  sortDirection: BookSortDirection;
   _cachedSettings: {
     currentPage: number;
     pageSize: BooksPageSize;
@@ -18,9 +20,10 @@ type BooksState = {
 const initialState: BooksState = {
   books: [],
   pageSize: 5,
-  sortingBy: 'title',
+  sortingBy: 'id',
   currentPage: 0,
   numberOfBooks: 0,
+  sortDirection: 'asc',
   _cachedSettings: null,
 };
 
@@ -32,6 +35,11 @@ export const BooksFeature = createFeature({
       ...s,
       books: a.payload,
       numberOfBooks: a.payload.length,
+    })),
+    on(BookActions.setSort, (s, a) => ({
+      ...s,
+      sortingBy: a.by,
+      sortDirection: a.direction,
     })),
     on(BookActions.setFilter, s => ({
       ...s,
@@ -61,30 +69,47 @@ export const BooksFeature = createFeature({
     selectCurrentPage,
     selectNumberOfBooks,
     selectSortingBy,
-  }) => ({
-    selectPagedBooks: createSelector(
+    selectSortDirection,
+  }) => {
+    const _selectSortedBooks = createSelector(
       selectBooks,
+      selectSortingBy,
+      selectSortDirection,
+      (books, sortingkey, direction) =>
+        books.toSorted((a, b) => {
+          if (direction === 'desc') {
+            const temp = a;
+            a = b;
+            b = temp;
+          }
+          return a[sortingkey]
+            .toLocaleString()
+            .localeCompare(b[sortingkey].toLocaleString());
+        })
+    );
+    const selectPagedBooks = createSelector(
+      _selectSortedBooks,
       selectPageSize,
       selectCurrentPage,
       selectSortingBy,
+      selectSortDirection,
 
-      (books, pageSize, currentPage, sortingBy) => {
+      (books, pageSize, currentPage, sortingBy, direction) => {
         switch (pageSize) {
           case 'all':
-            return books.toSorted((a, b) => {
-              return a[sortingBy]
-                .toLocaleString()
-                .localeCompare(b[sortingBy].toLocaleString());
-            });
+            return books;
           default:
             const startAt = currentPage * pageSize;
             const next = startAt + pageSize;
             return books.slice(startAt, next);
         }
       }
-    ),
-    selectPreviousDisabled: createSelector(selectCurrentPage, p => p === 0),
-    selectNextDisabled: createSelector(
+    );
+    const selectPreviousDisabled = createSelector(
+      selectCurrentPage,
+      p => p === 0
+    );
+    const selectNextDisabled = createSelector(
       selectCurrentPage,
       selectPageSize,
       selectBooks,
@@ -92,8 +117,8 @@ export const BooksFeature = createFeature({
         if (pageSize === 'all') return true;
         return currentPage * pageSize + pageSize >= length;
       }
-    ),
-    selectPagerSummary: createSelector(
+    );
+    const selectPagerSummary = createSelector(
       selectCurrentPage,
       selectPageSize,
       selectBooks,
@@ -105,6 +130,16 @@ export const BooksFeature = createFeature({
         const totalPages = length / pageSize;
         return `Page ${currentPage + 1} of ${totalPages} (${count} books)`;
       }
-    ),
-  }),
+    );
+    return {
+      selectPageSize,
+      selectCurrentPage,
+      selectNextDisabled,
+      selectPagedBooks,
+      selectPagerSummary,
+      selectPreviousDisabled,
+      selectSortingBy,
+      selectSortDirection,
+    };
+  },
 });

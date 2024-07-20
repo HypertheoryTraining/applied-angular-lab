@@ -1,8 +1,16 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { BookItem } from '../services/books.service';
 import { BooksPageSizeSelectorComponent } from './books-page-size-selector.component';
 import { BooksPagerComponent } from './books-pager.component';
 import { BooksFilterComponent } from './books-filter.component';
+import {
+  BooksFeature,
+  BookSortDirection,
+  BookSortkey,
+} from '../state/books.feature';
+import { Store } from '@ngrx/store';
+import { BookActions } from '../state/books.actions';
+import { BooksListSortHeaderComponent } from './books-list-sort-header.component';
 
 @Component({
   selector: 'app-books-list',
@@ -11,6 +19,7 @@ import { BooksFilterComponent } from './books-filter.component';
     BooksPageSizeSelectorComponent,
     BooksPagerComponent,
     BooksFilterComponent,
+    BooksListSortHeaderComponent,
   ],
   template: `
     <div>
@@ -21,10 +30,18 @@ import { BooksFilterComponent } from './books-filter.component';
     </div>
     <table>
       <thead>
-        <td>Id</td>
-        <td>Title</td>
-        <td>Author</td>
-        <td>Year</td>
+        <td>
+          <app-books-list-sort-header key="id" />
+        </td>
+        <td>
+          <app-books-list-sort-header key="title" />
+        </td>
+        <td>
+          <app-books-list-sort-header key="author" />
+        </td>
+        <td>
+          <app-books-list-sort-header key="year" />
+        </td>
       </thead>
       <tbody>
         @for (book of books(); track book.id) {
@@ -45,4 +62,5 @@ import { BooksFilterComponent } from './books-filter.component';
 })
 export class BooksListComponent {
   books = input.required<BookItem[]>();
+  #store = inject(Store);
 }
