@@ -14,6 +14,7 @@ export class BooksEffects {
   #service = inject(BooksDataService);
   #store = inject(Store);
   #fuzzySearch!: FuzzySearcher<BookItem>;
+
   #cachedUnFiltered: BookItem[] = [];
   loadBooks$ = createEffect(() => {
     return this.#actions$.pipe(
@@ -57,7 +58,7 @@ export class BooksEffects {
     },
     { dispatch: true }
   );
-  clearFilter = createEffect(() => {
+  clearFilter$ = createEffect(() => {
     return this.#actions$.pipe(
       ofType(BookActions.clearFilter),
       map(() => BookActions.books({ payload: this.#cachedUnFiltered }))

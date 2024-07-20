@@ -1,11 +1,16 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { BookItem } from '../services/books.service';
 import { BookActions } from './books.actions';
+
 export type BooksPageSize = 5 | 10 | 25 | 'all';
 export type BookSortDirection = 'asc' | 'desc';
 export type BookSortkey = keyof BookItem;
+
 type BooksState = {
   books: BookItem[];
+  filteredBooks: BookItem[];
+  authorFilter: string | null;
+  yearFilter: number | null;
   pageSize: BooksPageSize;
   currentPage: number;
   numberOfBooks: number;
@@ -19,8 +24,11 @@ type BooksState = {
 
 const initialState: BooksState = {
   books: [],
+  filteredBooks: [],
   pageSize: 5,
   sortingBy: 'id',
+  authorFilter: null,
+  yearFilter: null,
   currentPage: 0,
   numberOfBooks: 0,
   sortDirection: 'asc',
@@ -31,6 +39,21 @@ export const BooksFeature = createFeature({
   name: 'Books Feature',
   reducer: createReducer(
     initialState,
+    on(BookActions.filterSubsetByAuthor, (s, a) => ({
+      ...s,
+      authorFilter: a.payload,
+      yearFilter: null,
+    })),
+    on(BookActions.filterSubsetByYear, (s, a) => ({
+      ...s,
+      yearFilter: a.payload,
+      authorFilter: null,
+    })),
+    on(BookActions.clearFilterSubset, s => ({
+      ...s,
+      yearFilter: null,
+      authorFilter: null,
+    })),
     on(BookActions.books, (s, a) => ({
       ...s,
       books: a.payload,
@@ -70,6 +93,8 @@ export const BooksFeature = createFeature({
     selectNumberOfBooks,
     selectSortingBy,
     selectSortDirection,
+    selectAuthorFilter,
+    selectYearFilter,
   }) => {
     const _selectSortedBooks = createSelector(
       selectBooks,
@@ -129,15 +154,32 @@ export const BooksFeature = createFeature({
         return `Page ${currentPage + 1} of ${totalPages} (${count} books)`;
       }
     );
+    const selectFilteredSubset = createSelector(
+      _selectSortedBooks,
+      selectAuthorFilter,
+      selectYearFilter,
+      (books, author, year) => {
+        if (author === null && year === null) return [];
+
+        return books.filter(b => {
+          if (author != null) {
+            return b.author === author;
+          } else {
+            return b.year === year;
+          }
+        });
+      }
+    );
     return {
-      selectPageSize,
-      selectCurrentPage,
       selectNextDisabled,
       selectPagedBooks,
       selectPagerSummary,
       selectPreviousDisabled,
       selectSortingBy,
       selectSortDirection,
+      selectFilteredSubset,
+      selectAuthorFilter,
+      selectYearFilter,
     };
   },
 });

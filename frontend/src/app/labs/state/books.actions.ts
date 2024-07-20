@@ -13,5 +13,8 @@ export const BookActions = createActionGroup({
     'Set Filter': props<{ payload: string }>(),
     'Clear Filter': emptyProps(),
     'Set Sort': props<{ by: BookSortkey; direction: BookSortDirection }>(),
+    'Filter Subset By Author': props<{ payload: string }>(),
+    'Filter Subset By Year': props<{ payload: number }>(),
+    'Clear Filter Subset': emptyProps(),
   },
 });

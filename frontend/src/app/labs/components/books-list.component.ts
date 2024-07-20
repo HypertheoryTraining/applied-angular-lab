@@ -28,32 +28,62 @@ import { BooksListSortHeaderComponent } from './books-list-sort-header.component
     <div>
       <app-books-filter />
     </div>
-    <table>
-      <thead>
-        <td>
-          <app-books-list-sort-header key="id" />
-        </td>
-        <td>
-          <app-books-list-sort-header key="title" />
-        </td>
-        <td>
-          <app-books-list-sort-header key="author" />
-        </td>
-        <td>
-          <app-books-list-sort-header key="year" />
-        </td>
-      </thead>
-      <tbody>
-        @for (book of books(); track book.id) {
-          <tr>
-            <td>{{ book.id }}</td>
-            <td>{{ book.title }}</td>
-            <td>{{ book.author }}</td>
-            <td>{{ book.year }}</td>
-          </tr>
+    <div class="flex">
+      <table class="w-1/2">
+        <thead>
+          <td>
+            <app-books-list-sort-header key="id" />
+          </td>
+          <td>
+            <app-books-list-sort-header key="title" />
+          </td>
+          <td>
+            <app-books-list-sort-header key="author" />
+          </td>
+          <td>
+            <app-books-list-sort-header key="year" />
+          </td>
+        </thead>
+        <tbody>
+          @for (book of books(); track book.id) {
+            <tr>
+              <td>{{ book.id }}</td>
+              <td>{{ book.title }}</td>
+              <td>
+                <button
+                  (click)="filterAuthor(book.author)"
+                  class="btn btn-link">
+                  {{ book.author }}
+                </button>
+              </td>
+              <td>
+                <button (click)="filterYear(book.year)" class="btn btn-link">
+                  {{ book.year }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="w-1/2">
+        @if (author() !== null) {
+          <h3 class="font-bold text-lg">Books by {{ author() }}</h3>
         }
-      </tbody>
-    </table>
+        @if (year() !== null) {
+          <h3 class="font-bold text-lg">Books in {{ year() }}</h3>
+        }
+        @for (book of subset(); track book.id) {
+          <p>{{ book.title }} by {{ book.author }} in {{ book.year }}</p>
+          <div>
+            <button
+              (click)="clearSubsetFilter()"
+              class="btn btn-sm btn-primary">
+              Clear
+            </button>
+          </div>
+        }
+      </div>
+    </div>
     <div>
       <app-books-pager />
     </div>
@@ -63,4 +93,16 @@ import { BooksListSortHeaderComponent } from './books-list-sort-header.component
 export class BooksListComponent {
   books = input.required<BookItem[]>();
   #store = inject(Store);
+  author = this.#store.selectSignal(BooksFeature.selectAuthorFilter);
+  year = this.#store.selectSignal(BooksFeature.selectYearFilter);
+  subset = this.#store.selectSignal(BooksFeature.selectFilteredSubset);
+  filterAuthor(payload: string) {
+    this.#store.dispatch(BookActions.filterSubsetByAuthor({ payload }));
+  }
+  filterYear(payload: number) {
+    this.#store.dispatch(BookActions.filterSubsetByYear({ payload }));
+  }
+  clearSubsetFilter() {
+    this.#store.dispatch(BookActions.clearFilterSubset());
+  }
 }
