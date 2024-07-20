@@ -4,6 +4,10 @@ import { LabsComponent } from './labs/labs.component';
 import { CounterComponent } from './labs/components/counter.component';
 import { PrefsComponent } from './labs/components/prefs.component';
 import { BooksComponent } from './labs/components/books.component';
+import { provideState } from '@ngrx/store';
+import { BooksFeature } from './labs/state/books.feature';
+import { provideEffects } from '@ngrx/effects';
+import { BooksEffects } from './labs/state/books.effects';
 
 export const routes: Routes = [
   {
@@ -39,6 +43,7 @@ export const routes: Routes = [
       },
       {
         path: 'books',
+        providers: [provideState(BooksFeature), provideEffects([BooksEffects])],
         component: BooksComponent,
       },
     ],
