@@ -2,11 +2,13 @@ import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { BookItem } from '../services/books.service';
 import { BookActions } from './books.actions';
 export type BooksPageSize = 5 | 10 | 25 | 'all';
+export type BookSortkey = keyof BookItem;
 type BooksState = {
   books: BookItem[];
   pageSize: BooksPageSize;
   currentPage: number;
   numberOfBooks: number;
+  sortingBy: BookSortkey;
   _cachedSettings: {
     currentPage: number;
     pageSize: BooksPageSize;
@@ -16,6 +18,7 @@ type BooksState = {
 const initialState: BooksState = {
   books: [],
   pageSize: 5,
+  sortingBy: 'title',
   currentPage: 0,
   numberOfBooks: 0,
   _cachedSettings: null,
@@ -57,15 +60,22 @@ export const BooksFeature = createFeature({
     selectPageSize,
     selectCurrentPage,
     selectNumberOfBooks,
+    selectSortingBy,
   }) => ({
     selectPagedBooks: createSelector(
       selectBooks,
       selectPageSize,
       selectCurrentPage,
-      (books, pageSize, currentPage) => {
+      selectSortingBy,
+
+      (books, pageSize, currentPage, sortingBy) => {
         switch (pageSize) {
           case 'all':
-            return books;
+            return books.toSorted((a, b) => {
+              return a[sortingBy]
+                .toLocaleString()
+                .localeCompare(b[sortingBy].toLocaleString());
+            });
           default:
             const startAt = currentPage * pageSize;
             const next = startAt + pageSize;
