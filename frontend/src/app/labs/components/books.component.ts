@@ -8,6 +8,7 @@ import { BooksSummaryComponent } from './books-summary.component';
 @Component({
   selector: 'app-books',
   standalone: true,
+  animations: [],
   imports: [JsonPipe, BooksListComponent, BooksSummaryComponent],
   template: `
     @if (books()) {

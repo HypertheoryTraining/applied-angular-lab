@@ -1,16 +1,13 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, inject, input } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { BookItem } from '../services/books.service';
+import { BookActions } from '../state/books.actions';
+import { BooksFeature } from '../state/books.feature';
+import { BooksFilterComponent } from './books-filter.component';
+import { BooksListSortHeaderComponent } from './books-list-sort-header.component';
 import { BooksPageSizeSelectorComponent } from './books-page-size-selector.component';
 import { BooksPagerComponent } from './books-pager.component';
-import { BooksFilterComponent } from './books-filter.component';
-import {
-  BooksFeature,
-  BookSortDirection,
-  BookSortkey,
-} from '../state/books.feature';
-import { Store } from '@ngrx/store';
-import { BookActions } from '../state/books.actions';
-import { BooksListSortHeaderComponent } from './books-list-sort-header.component';
 
 @Component({
   selector: 'app-books-list',
@@ -21,6 +18,7 @@ import { BooksListSortHeaderComponent } from './books-list-sort-header.component
     BooksFilterComponent,
     BooksListSortHeaderComponent,
   ],
+  animations: [],
   template: `
     <div>
       <app-books-page-size-selector />
@@ -48,19 +46,29 @@ import { BooksListSortHeaderComponent } from './books-list-sort-header.component
           <tbody>
             @for (book of books(); track book.id) {
               <tr>
-                <td>{{ book.id }}</td>
-                <td>{{ book.title }}</td>
                 <td>
-                  <button
-                    (click)="filterAuthor(book.author)"
-                    class="btn btn-link">
-                    {{ book.author }}
-                  </button>
+                  <span>{{ book.id }}</span>
                 </td>
                 <td>
-                  <button (click)="filterYear(book.year)" class="btn btn-link">
-                    {{ book.year }}
-                  </button>
+                  <span>{{ book.title }}</span>
+                </td>
+                <td>
+                  <span>
+                    <button
+                      (click)="filterAuthor(book.author)"
+                      class="btn btn-link">
+                      {{ book.author }}
+                    </button>
+                  </span>
+                </td>
+                <td>
+                  <span>
+                    <button
+                      (click)="filterYear(book.year)"
+                      class="btn btn-link">
+                      {{ book.year }}
+                    </button>
+                  </span>
                 </td>
               </tr>
             }
@@ -96,7 +104,17 @@ import { BooksListSortHeaderComponent } from './books-list-sort-header.component
       </div>
     </div>
   `,
-  styles: ``,
+  styles: `
+    tbody tr {
+      animation: show 600ms 100ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+      opacity: 0;
+    }
+    @keyframes show {
+      100% {
+        opacity: 1;
+      }
+    }
+  `,
 })
 export class BooksListComponent {
   books = input.required<BookItem[]>();

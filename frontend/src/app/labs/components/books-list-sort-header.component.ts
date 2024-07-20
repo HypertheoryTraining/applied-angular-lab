@@ -4,42 +4,43 @@ import {
   BookSortDirection,
   BookSortkey,
 } from '../state/books.feature';
-import { TitleCasePipe } from '@angular/common';
+import { NgClass, TitleCasePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { BookActions } from '../state/books.actions';
 
 @Component({
   selector: 'app-books-list-sort-header',
   standalone: true,
-  imports: [TitleCasePipe],
+  imports: [TitleCasePipe, NgClass],
   template: `
-    @if (sortingBy() === key()) {
-      @switch (sortingDirection()) {
-        @case ('asc') {
-          <button (click)="setSort(key(), 'desc')" class="btn btn-link">
-            {{ key() | titlecase }} (asc)
-          </button>
-        }
-        @case ('desc') {
-          <button (click)="setSort(key(), 'asc')" class="btn btn-link">
-            {{ key() | titlecase }} (desc)
-          </button>
-        }
-      }
-    } @else {
-      <button (click)="setSort(key(), 'asc')" class="btn btn-link">
-        {{ key() | titlecase }}
-      </button>
+    <button
+      (click)="setSort(key())"
+      class="btn btn-link "
+      [ngClass]="{
+        sort: sortingBy() === key(),
+        'sort-asc': sortingDirection() === 'asc',
+        'sort-desc': sortingDirection() === 'desc',
+      }">
+      {{ key() | titlecase }}
+    </button>
+  `,
+  styles: `
+    button.sort.sort-asc:after {
+      content: 'A';
+    }
+
+    button.sort.sort-desc:after {
+      content: 'D';
     }
   `,
-  styles: ``,
 })
 export class BooksListSortHeaderComponent {
   key = input.required<BookSortkey>();
   #store = inject(Store);
   sortingBy = this.#store.selectSignal(BooksFeature.selectSortingBy);
   sortingDirection = this.#store.selectSignal(BooksFeature.selectSortDirection);
-  setSort(by: BookSortkey, direction: BookSortDirection) {
+  setSort(by: BookSortkey) {
+    const direction = this.sortingDirection() === 'asc' ? 'desc' : 'asc';
     this.#store.dispatch(
       BookActions.setSort({
         by,

@@ -8,6 +8,7 @@ import { provideState } from '@ngrx/store';
 import { BooksFeature } from './labs/state/books.feature';
 import { provideEffects } from '@ngrx/effects';
 import { BooksEffects } from './labs/state/books.effects';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const routes: Routes = [
   {
@@ -43,7 +44,11 @@ export const routes: Routes = [
       },
       {
         path: 'books',
-        providers: [provideState(BooksFeature), provideEffects([BooksEffects])],
+        providers: [
+          provideState(BooksFeature),
+          provideEffects([BooksEffects]),
+          provideAnimationsAsync(),
+        ],
         component: BooksComponent,
       },
     ],
