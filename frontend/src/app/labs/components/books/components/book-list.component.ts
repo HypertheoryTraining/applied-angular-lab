@@ -2,23 +2,24 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BookListSelectors } from '../state';
+import { BooksListHeaderSortComponent } from './books-list-header-sort.component';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [JsonPipe],
+  imports: [BooksListHeaderSortComponent],
   template: ` <div class="overflow-x-auto h-svh max-h-full">
     <table class="table table-zebra table-pin-rows ">
       <thead>
-        <td>Id</td>
-        <td>Title</td>
-        <td>Author</td>
-        <td>Year</td>
+        <td><app-books-list-header-sort key="id" /></td>
+        <td><app-books-list-header-sort key="title" /></td>
+        <td><app-books-list-header-sort key="author" /></td>
+        <td><app-books-list-header-sort key="year" /></td>
       </thead>
       <tbody>
         @for (book of books(); track book.id) {
           <tr>
-            <td class="w-12">
+            <td>
               <span>{{ book.id }}</span>
             </td>
             <td class="w-1/3 overflow-clip">

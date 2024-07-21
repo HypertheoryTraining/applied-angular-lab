@@ -1,16 +1,17 @@
-import { createFeature, createReducer, createSelector } from '@ngrx/store';
+import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { BooksSourceFeature } from '../../../state/books/books-source/books-source.feature';
 import { BookItem } from '../../../services/books.service';
+import { BookSortedEvents } from './books-sorted.actions';
 
 export type BookKeys = keyof BookItem;
 export type SortDirection = 'asc' | 'desc';
 
-type BookSortedState = {
+export type BooksSortedState = {
   sortingBy: BookKeys;
   direction: SortDirection;
 };
 
-const initialState: BookSortedState = {
+const initialState: BooksSortedState = {
   sortingBy: 'id',
   direction: 'asc',
 };
@@ -18,7 +19,10 @@ const initialState: BookSortedState = {
 const NUMERIC_KEYS: BookKeys[] = ['id', 'year'] as const;
 export const BooksSortedFeature = createFeature({
   name: '[Books] Sorted Books',
-  reducer: createReducer(initialState),
+  reducer: createReducer(
+    initialState,
+    on(BookSortedEvents.sortBySet, (s, { payload }) => payload)
+  ),
   extraSelectors: ({ selectSortingBy, selectDirection }) => {
     const _selectSortedBooks = createSelector(
       selectSortingBy,
