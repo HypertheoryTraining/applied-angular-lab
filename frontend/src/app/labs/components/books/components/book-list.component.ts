@@ -1,13 +1,13 @@
-import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BookListSelectors } from '../state';
 import { BooksListHeaderSortComponent } from './books-list-header-sort.component';
+import { BooksPagerComponent } from './books-pager.component';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [BooksListHeaderSortComponent],
+  imports: [BooksListHeaderSortComponent, BooksPagerComponent],
   template: ` <div class="overflow-x-auto h-svh max-h-full">
     <table class="table table-zebra table-pin-rows ">
       <thead>

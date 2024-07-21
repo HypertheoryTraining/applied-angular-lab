@@ -1,11 +1,10 @@
-import { Component, computed, effect, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 
 @Component({
   selector: 'app-signals',
   standalone: true,
   imports: [],
   template: `
-    <p (click)="doIt()">Hi, {{ user().name }}</p>
     <p>He is {{ user().age }} years old</p>
 
     <p>Num {{ num() }}</p>
@@ -19,7 +18,7 @@ import { Component, computed, effect, OnInit, signal } from '@angular/core';
   `,
   styles: ``,
 })
-export class SignalsComponent implements OnInit {
+export class SignalsComponent {
   constructor() {
     effect(() => {
       if (this.num() > 50) {
@@ -42,6 +41,4 @@ export class SignalsComponent implements OnInit {
   decrement() {
     this.num.set(this.num() - 1);
   }
-  doIt() {}
-  ngOnInit(): void {}
 }

@@ -17,6 +17,14 @@ export const BooksPagedFeature = createFeature({
     on(BooksPagedEvents.pageSizeSetTo, (s, { payload }) => ({
       ...s,
       pageSize: payload,
+    })),
+    on(BooksPagedEvents.nextPageRequested, s => ({
+      ...s,
+      currentPage: s.currentPage + 1,
+    })),
+    on(BooksPagedEvents.prviousPageRequested, s => ({
+      ...s,
+      currentPage: s.currentPage - 1,
     }))
   ),
   extraSelectors: ({ selectCurrentPage, selectPageSize }) => {
@@ -29,11 +37,28 @@ export const BooksPagedFeature = createFeature({
           case 'all': {
             return books;
           }
-          default:
+          default: {
             const startAt = currentPage * pageSize;
             const next = startAt + pageSize;
             return books.slice(startAt, next);
+          }
         }
+      }
+    );
+
+    const selectPageSummary = createSelector(
+      selectCurrentPage,
+      selectPageSize,
+      BooksSortedFeature.selectSortedBooks,
+      (current, size, { length }) => {
+        let num: number = 1;
+        if (size !== 'all') {
+          num = Math.ceil(length / size);
+        }
+        return {
+          current: current + 1,
+          of: num,
+        };
       }
     );
 
@@ -47,6 +72,7 @@ export const BooksPagedFeature = createFeature({
         .map(a => ({ ...a, label: a.label.toUpperCase() }))
     );
     return {
+      selectPageSummary,
       selectPagedBooks,
       selectPageSizeOptions,
     };

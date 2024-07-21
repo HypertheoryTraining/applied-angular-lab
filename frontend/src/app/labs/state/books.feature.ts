@@ -127,10 +127,11 @@ export const BooksFeature = createFeature({
         switch (pageSize) {
           case 'all':
             return books;
-          default:
+          default: {
             const startAt = currentPage * pageSize;
             const next = startAt + pageSize;
             return books.slice(startAt, next);
+          }
         }
       }
     );

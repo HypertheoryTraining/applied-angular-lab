@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CounterService } from '../services/counter.service';
 
 @Component({
@@ -35,7 +35,7 @@ export class CounterComponent {
   current = computed(() => this.#current());
   fizzBuzz = computed(() => {
     let response = '';
-    let current = this.current();
+    const current = this.current();
     if (current === 0) {
       return response; // Zero is NOT fizz nor Buzz and certainly not both, IMO.
     }

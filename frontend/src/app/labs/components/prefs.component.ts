@@ -19,7 +19,7 @@ import { CounterService } from '../services/counter.service';
       3
     </button>
     <button
-      [disabled]="countingBy() == 5"
+      [disabled]="countingBy() === 5"
       (click)="counterServe.setCountBy(5)"
       class="btn join-item">
       5

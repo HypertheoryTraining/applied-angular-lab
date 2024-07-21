@@ -47,7 +47,7 @@ export class BooksEffects {
       return this.#actions$.pipe(
         ofType(BookActions.setFilter),
         concatLatestFrom(() => this.#store.select(BooksFeature.selectBooks)),
-        map(([{ payload }, b]) => {
+        map(([{ payload }]) => {
           const searchTerm = payload.trim();
           if (!searchTerm) {
             return BookActions.books({ payload: this.#cachedUnFiltered });

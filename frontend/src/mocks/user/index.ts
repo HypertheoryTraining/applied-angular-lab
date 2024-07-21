@@ -1,4 +1,4 @@
-import { http, HttpResponse, delay } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 const handlers = [
   http.get('/api/user', async () => {

@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NavbarLinks } from '../models';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { LinkItemChildrenComponent } from './link-item-children.component';
 import { LinkItemComponent } from './link-item.component';
 

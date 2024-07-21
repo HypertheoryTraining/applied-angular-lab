@@ -87,12 +87,7 @@ const errorStateMode: Omit<UiStateModes, 'isError'> = {
   isFetching: false,
   isPresent: false,
 };
-const fetchingStateMode: UiStateModes = {
-  isLoading: false,
-  isError: false,
-  isFetching: true,
-  isPresent: true,
-};
+
 function getModes(state: UiStateModes): ModeKeys[] {
   return Object.keys(state).filter(
     m => state[m as unknown as ModeKeys] === true

@@ -1,6 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
+import createFuzzySearch, { FuzzySearcher } from '@nozbe/microfuzz';
 import { SoftwareListActions } from '../actions/list.actions';
-import createFuzzySearch, { fuzzyMatch, FuzzySearcher } from '@nozbe/microfuzz';
 
 export type SoftwareItem = {
   id: string;

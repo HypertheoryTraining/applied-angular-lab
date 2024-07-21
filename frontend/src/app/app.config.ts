@@ -1,15 +1,15 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { provideRouter, withDebugTracing } from '@angular/router';
 
-import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideState, provideStore } from '@ngrx/store';
-import { UserFeature } from './state/user/user-feature';
 import { provideEffects } from '@ngrx/effects';
-import { loadUser } from './state/user/get-user.effect';
+import { provideState, provideStore } from '@ngrx/store';
+import { routes } from './app.routes';
 import { UiStateFeature } from './state/ui-state';
 import { navigationInterceptor } from './state/ui-state/interceptor';
+import { loadUser } from './state/user/get-user.effect';
+import { UserFeature } from './state/user/user-feature';
 
 export const appConfig: ApplicationConfig = {
   providers: [

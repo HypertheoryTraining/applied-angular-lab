@@ -1,12 +1,7 @@
 import { effect, Injectable, signal } from '@angular/core';
 type CountByDelta = 1 | 3 | 5;
 type CounterState = { current: number; by: CountByDelta };
-import z from 'zod';
 
-const Schema = z.object({
-  current: z.number(),
-  by: z.number(),
-});
 @Injectable({ providedIn: 'root' })
 export class CounterService {
   #current = signal(0);
