@@ -1,33 +1,31 @@
-import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, inject, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BookItem } from '../services/books.service';
+import { BooksPagedFeature } from '../state/books-paged.feature';
 import { BookActions } from '../state/books.actions';
 import { BooksFeature } from '../state/books.feature';
 import { BooksFilterComponent } from './books-filter.component';
 import { BooksListSortHeaderComponent } from './books-list-sort-header.component';
 import { BooksPageSizeSelectorComponent } from './books-page-size-selector.component';
 import { BooksPagerComponent } from './books-pager.component';
+import { Pluralize } from './pluralize.pipe';
 
 @Component({
   selector: 'app-books-list',
   standalone: true,
   imports: [
+    Pluralize,
     BooksPageSizeSelectorComponent,
     BooksPagerComponent,
     BooksFilterComponent,
     BooksListSortHeaderComponent,
   ],
-  animations: [],
   template: `
     <div>
       <app-books-page-size-selector />
     </div>
-    <div>
-      <app-books-filter />
-    </div>
+
     <div class="flex">
-      <div>
+      <div class="w-1/2">
         <table>
           <thead>
             <td>
@@ -49,10 +47,10 @@ import { BooksPagerComponent } from './books-pager.component';
                 <td>
                   <span>{{ book.id }}</span>
                 </td>
-                <td>
+                <td class="w-1/3 overflow-clip">
                   <span>{{ book.title }}</span>
                 </td>
-                <td>
+                <td class="w-1/3">
                   <span>
                     <button
                       (click)="filterAuthor(book.author)"
@@ -79,28 +77,38 @@ import { BooksPagerComponent } from './books-pager.component';
         </div>
       </div>
       <div class="w-1/2">
-        <div>
-          @if (author() !== null) {
-            <h3 class="font-bold text-lg">Books by {{ author() }}</h3>
-          }
-          @if (year() !== null) {
-            <h3 class="font-bold text-lg">Books in {{ year() }}</h3>
-          }
-          @for (book of subset(); track book.id) {
-            <p class="ml-4">
-              {{ book.title }} by {{ book.author }} in {{ book.year }}
-            </p>
-          }
-          @if (subset().length) {
-            <div>
-              <button
-                (click)="clearSubsetFilter()"
-                class="btn btn-sm btn-primary">
-                Clear
-              </button>
-            </div>
-          }
-        </div>
+        <!-- @if (subset().length) {
+          <div>
+            @if (author() !== null) {
+              <h3 class="font-bold text-lg">
+                {{ subset().length }}
+                {{ subset().length | pluralize: 'Book' : 'Books' }} by
+                {{ author() }}
+              </h3>
+            }
+            @if (year() !== null) {
+              <h3 class="font-bold text-lg">
+                {{ subset().length }}
+                {{ subset().length | pluralize: 'Book' : 'Books' }} in
+                {{ year() }}
+              </h3>
+            }
+            @for (book of subset(); track book.id) {
+              <p class="ml-4">
+                {{ book.title }} by {{ book.author }} in {{ book.year }}
+              </p>
+            }
+            @if (subset().length) {
+              <div>
+                <button
+                  (click)="clearSubsetFilter()"
+                  class="btn btn-sm btn-primary">
+                  Clear
+                </button>
+              </div>
+            }
+          </div> 
+        }-->
       </div>
     </div>
   `,
@@ -117,8 +125,8 @@ import { BooksPagerComponent } from './books-pager.component';
   `,
 })
 export class BooksListComponent {
-  books = input.required<BookItem[]>();
   #store = inject(Store);
+  books = this.#store.selectSignal(BooksPagedFeature.selectPagedBooks);
   author = this.#store.selectSignal(BooksFeature.selectAuthorFilter);
   year = this.#store.selectSignal(BooksFeature.selectYearFilter);
   subset = this.#store.selectSignal(BooksFeature.selectFilteredSubset);

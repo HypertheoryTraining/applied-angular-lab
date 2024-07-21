@@ -100,17 +100,23 @@ export const BooksFeature = createFeature({
       selectBooks,
       selectSortingBy,
       selectSortDirection,
-      (books, sortingkey, direction) =>
-        books.toSorted((a, b) => {
+      (books, sortingkey, direction) => {
+        const comparer = (a: string | number, b: string | number): number => {
           if (direction === 'desc') {
-            const temp = a;
-            a = b;
-            b = temp;
+            [a, b] = Swap(a, b);
           }
-          return a[sortingkey]
-            .toLocaleString()
-            .localeCompare(b[sortingkey].toLocaleString());
-        })
+          if (sortingkey === 'id' || sortingkey === 'year') {
+            a = +a;
+            b = +b;
+            return a === b ? 0 : a < b ? -1 : 1;
+          } else {
+            return a.toLocaleString().localeCompare(b.toLocaleString());
+          }
+        };
+        return books.toSorted((a, b) => {
+          return comparer(a[sortingkey], b[sortingkey]);
+        });
+      }
     );
     const selectPagedBooks = createSelector(
       _selectSortedBooks,
@@ -155,21 +161,20 @@ export const BooksFeature = createFeature({
       }
     );
     const selectFilteredSubset = createSelector(
-      _selectSortedBooks,
+      selectBooks,
       selectAuthorFilter,
       selectYearFilter,
       (books, author, year) => {
-        if (author === null && year === null) return [];
-
-        return books.filter(b => {
-          if (author != null) {
-            return b.author === author;
-          } else {
-            return b.year === year;
-          }
-        });
+        if (author !== null) {
+          return books.filter(b => b.author === author);
+        }
+        if (year !== null) {
+          return books.filter(b => b.year === year);
+        }
+        return [];
       }
     );
+
     return {
       selectNextDisabled,
       selectPagedBooks,
@@ -183,3 +188,7 @@ export const BooksFeature = createFeature({
     };
   },
 });
+
+function Swap<T>(a: T, b: T) {
+  return [b, a];
+}

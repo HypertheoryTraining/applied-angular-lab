@@ -1,5 +1,7 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { BookItem } from '../services/books.service';
+import { Store } from '@ngrx/store';
+import { BooksSummaryFeature } from '../state/books-summary.feature';
 
 @Component({
   selector: 'app-books-summary',
@@ -24,7 +26,7 @@ import { BookItem } from '../services/books.service';
   styles: ``,
 })
 export class BooksSummaryComponent {
-  books = input.required<BookItem[]>();
+  books = inject(Store).selectSignal(BooksSummaryFeature.selectBooks);
   summary = computed(() => {
     let initialS: Record<string, number> = {};
     const cents =

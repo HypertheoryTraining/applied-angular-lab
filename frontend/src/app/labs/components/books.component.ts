@@ -11,25 +11,23 @@ import { BooksSummaryComponent } from './books-summary.component';
   animations: [],
   imports: [JsonPipe, BooksListComponent, BooksSummaryComponent],
   template: `
-    @if (books()) {
-      <app-books-list [books]="pagedBooks() || []" />
-      <div class="collapse bg-base-200 pt-4" (click)="toggle()">
-        <input type="checkbox" [checked]="showSummary()" />
-        <div class="collapse-title text-xl font-medium">
-          Show the Century Breakdown for All Books
-        </div>
-        <div class="collapse-content">
-          <app-books-summary [books]="books()" />
-        </div>
+    <app-books-list />
+    <div class="collapse bg-base-200 pt-4" (click)="toggle()">
+      <input type="checkbox" [checked]="showSummary()" />
+      <div class="collapse-title text-xl font-medium">
+        Show the Century Breakdown for All Books
       </div>
-    }
+      <div class="collapse-content">
+        <app-books-summary />
+      </div>
+    </div>
   `,
   styles: ``,
 })
 export class BooksComponent {
   #store = inject(Store);
-  pagedBooks = this.#store.selectSignal(BooksFeature.selectPagedBooks);
-  books = this.#store.selectSignal(BooksFeature.selectBooks);
+  // pagedBooks = this.#store.selectSignal(BooksFeature.selectPagedBooks);
+  // books = this.#store.selectSignal(BooksFeature.selectBooks);
   showSummary = signal(false);
   constructor() {
     this.#store.dispatch(BookActions.loadTheBooks());

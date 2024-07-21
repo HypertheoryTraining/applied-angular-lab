@@ -9,6 +9,9 @@ import { BooksFeature } from './labs/state/books.feature';
 import { provideEffects } from '@ngrx/effects';
 import { BooksEffects } from './labs/state/books.effects';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { BooksSummaryFeature } from './labs/state/books-summary.feature';
+import { BooksSortedFeature } from './labs/state/books-sorted.feature';
+import { BooksPagedFeature } from './labs/state/books-paged.feature';
 
 export const routes: Routes = [
   {
@@ -46,6 +49,9 @@ export const routes: Routes = [
         path: 'books',
         providers: [
           provideState(BooksFeature),
+          provideState(BooksSummaryFeature),
+          provideState(BooksSortedFeature),
+          provideState(BooksPagedFeature),
           provideEffects([BooksEffects]),
           provideAnimationsAsync(),
         ],

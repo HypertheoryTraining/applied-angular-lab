@@ -1,12 +1,9 @@
-import { Component, inject, input } from '@angular/core';
-import {
-  BooksFeature,
-  BookSortDirection,
-  BookSortkey,
-} from '../state/books.feature';
 import { NgClass, TitleCasePipe } from '@angular/common';
+import { Component, inject, input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BookActions } from '../state/books.actions';
+import { BookSortingActions } from '../state/books-sorted.actions';
+import { BooksSortedFeature } from '../state/books-sorted.feature';
+import { BookSortkey } from '../state/books.feature';
 
 @Component({
   selector: 'app-books-list-sort-header',
@@ -26,25 +23,29 @@ import { BookActions } from '../state/books.actions';
   `,
   styles: `
     button.sort.sort-asc:after {
-      content: 'A';
+      content: '↑';
     }
 
     button.sort.sort-desc:after {
-      content: 'D';
+      content: '↓';
     }
   `,
 })
 export class BooksListSortHeaderComponent {
   key = input.required<BookSortkey>();
   #store = inject(Store);
-  sortingBy = this.#store.selectSignal(BooksFeature.selectSortingBy);
-  sortingDirection = this.#store.selectSignal(BooksFeature.selectSortDirection);
-  setSort(by: BookSortkey) {
+  sortingBy = this.#store.selectSignal(BooksSortedFeature.selectFilter);
+  sortingDirection = this.#store.selectSignal(
+    BooksSortedFeature.selectDirection
+  );
+  setSort(filter: BookSortkey) {
     const direction = this.sortingDirection() === 'asc' ? 'desc' : 'asc';
     this.#store.dispatch(
-      BookActions.setSort({
-        by,
-        direction,
+      BookSortingActions.setSort({
+        payload: {
+          filter,
+          direction,
+        },
       })
     );
   }
