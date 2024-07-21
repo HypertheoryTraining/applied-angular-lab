@@ -11,7 +11,7 @@ const initialState: BooksPagedType = {
   currentPage: 0,
 };
 
-export const BooksPagedFeature = createFeature({
+const BooksPagedFeature = createFeature({
   name: 'Books Paged Feature',
   reducer: createReducer(initialState),
   extraSelectors: ({ selectCurrentPage, selectPageSize }) => {

@@ -7,6 +7,10 @@ import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import { BooksFeature } from './books.feature';
 import createFuzzySearch, { FuzzySearcher } from '@nozbe/microfuzz';
+import {
+  BooksSourceCommands,
+  BooksSourceDocuments,
+} from './books/books-source/books-source.actions';
 
 @Injectable({ providedIn: 'root' })
 export class BooksEffects {
@@ -18,7 +22,7 @@ export class BooksEffects {
   #cachedUnFiltered: BookItem[] = [];
   loadBooks$ = createEffect(() => {
     return this.#actions$.pipe(
-      ofType(BookActions.loadTheBooks),
+      ofType(BooksSourceCommands.loadBooks),
       switchMap(() =>
         this.#service.getBooks().pipe(
           tap(payload => (this.#cachedUnFiltered = payload)),
@@ -32,7 +36,7 @@ export class BooksEffects {
                 ],
               }))
           ),
-          map(payload => BookActions.books({ payload }))
+          map(payload => BooksSourceDocuments.books({ payload }))
         )
       )
     );

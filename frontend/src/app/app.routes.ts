@@ -1,17 +1,17 @@
 import { CanActivateFn, Routes } from '@angular/router';
-import { StudentsComponent } from './students/students.component';
-import { LabsComponent } from './labs/labs.component';
 import { CounterComponent } from './labs/components/counter.component';
 import { PrefsComponent } from './labs/components/prefs.component';
-import { BooksComponent } from './labs/components/books.component';
-import { provideState } from '@ngrx/store';
-import { BooksFeature } from './labs/state/books.feature';
-import { provideEffects } from '@ngrx/effects';
-import { BooksEffects } from './labs/state/books.effects';
+import { LabsComponent } from './labs/labs.component';
+import { StudentsComponent } from './students/students.component';
+
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { BooksSummaryFeature } from './labs/state/books-summary.feature';
-import { BooksSortedFeature } from './labs/state/books-sorted.feature';
-import { BooksPagedFeature } from './labs/state/books-paged.feature';
+import { provideEffects } from '@ngrx/effects';
+import { provideState } from '@ngrx/store';
+import { BooksComponent } from './labs/components/books/books-component';
+import { BooksEffects } from './labs/state/books.effects';
+import { BooksSourceFeature } from './labs/state/books/books-source/books-source.feature';
+import { BooksSortedFeature } from './labs/components/books/state/books-sorted.feature';
+import { BooksPagedFeature } from './labs/components/books/state/books-paged.feature';
 
 export const routes: Routes = [
   {
@@ -36,6 +36,7 @@ export const routes: Routes = [
   {
     path: 'labs',
     component: LabsComponent,
+    providers: [provideState(BooksSourceFeature)],
     children: [
       {
         path: 'counter',
@@ -48,8 +49,6 @@ export const routes: Routes = [
       {
         path: 'books',
         providers: [
-          provideState(BooksFeature),
-          provideState(BooksSummaryFeature),
           provideState(BooksSortedFeature),
           provideState(BooksPagedFeature),
           provideEffects([BooksEffects]),

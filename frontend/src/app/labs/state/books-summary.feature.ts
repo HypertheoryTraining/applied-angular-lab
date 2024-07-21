@@ -5,7 +5,7 @@ export type BookSummaryState = {};
 
 const initialState: BookSummaryState = {};
 
-export const BooksSummaryFeature = createFeature({
+const BooksSummaryFeature = createFeature({
   name: 'Books Summary',
   reducer: createReducer(initialState),
   extraSelectors: () => {

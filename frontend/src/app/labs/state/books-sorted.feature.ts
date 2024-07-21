@@ -1,7 +1,7 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
-import { BookSortingActions } from './books-sorted.actions';
-import { BooksFeature, BookSortDirection, BookSortkey } from './books.feature';
 import { BooksPagedFeature } from './books-paged.feature';
+import { BookSortingActions } from './books-sorted.actions';
+import { BookSortDirection, BookSortkey } from './books.feature';
 
 export type BooksSortedState = {
   filter: BookSortkey;
@@ -13,7 +13,7 @@ const initialState: BooksSortedState = {
   direction: 'asc',
 };
 
-export const BooksSortedFeature = createFeature({
+const BooksSortedFeature = createFeature({
   name: 'Books Sorted Feature',
   reducer: createReducer(
     initialState,
@@ -25,17 +25,32 @@ export const BooksSortedFeature = createFeature({
       selectDirection,
       BooksPagedFeature.selectPagedBooks,
       (filter, direction, books) => {
-        const comparer = (a: string | number, b: string | number): number => {
-          if (direction === 'asc') {
+        return books.toSorted((booka, bookb) => {
+          let a: number | string;
+          let b: number | string;
+          if (typeof filter === 'number') {
+            a = booka[filter];
+            b = bookb[filter];
+          } else {
+            a = booka[filter].toLocaleString();
+            b = bookb[filter].toLocaleString();
+          }
+          if (direction === 'desc') {
             [a, b] = [b, a];
           }
-          if (filter === 'id' || filter == 'year') {
-            return +a === +b ? 0 : a < b ? -1 : 1;
-          } else {
-            return a.toLocaleString().localeCompare(b.toLocaleString());
-          }
-        };
-        return books.toSorted((l, r) => comparer());
+          return a.localeCompare(b);
+        });
+        // const comparer = (a: string | number, b: string | number): number => {
+        //   if (direction === 'asc') {
+        //     [a, b] = [b, a];
+        //   }
+        //   if (filter === 'id' || filter == 'year') {
+        //     return +a === +b ? 0 : a < b ? -1 : 1;
+        //   } else {
+        //     return a.toLocaleString().localeCompare(b.toLocaleString());
+        //   }
+        // };
+        // return books.toSorted((l, r) => );
       }
     );
     return {
