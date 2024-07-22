@@ -4,14 +4,8 @@ import { PrefsComponent } from './labs/components/prefs.component';
 import { LabsComponent } from './labs/labs.component';
 import { StudentsComponent } from './students/students.component';
 
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
-import { BooksComponent } from './labs/components/books/books-component';
-import { BooksPagedFeature } from './labs/components/books/state/books-paged.feature';
-import { BooksSortedFeature } from './labs/components/books/state/books-sorted.feature';
-import { BooksEffects } from './labs/state/books.effects';
-import { BooksSourceFeature } from './labs/state/books/books-source/books-source.feature';
+import { BooksSourceFeature } from './labs/books/state/books/books-source/books-source.feature';
 
 export const routes: Routes = [
   {
@@ -48,13 +42,8 @@ export const routes: Routes = [
       },
       {
         path: 'books',
-        providers: [
-          provideState(BooksSortedFeature),
-          provideState(BooksPagedFeature),
-          provideEffects([BooksEffects]),
-          provideAnimationsAsync(),
-        ],
-        component: BooksComponent,
+        loadChildren: () =>
+          import('./labs/books/books.routes').then(b => b.BOOK_ROUTES),
       },
     ],
   },

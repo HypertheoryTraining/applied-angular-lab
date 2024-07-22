@@ -1,11 +1,11 @@
 import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BooksPagedFeature, BooksPageSize } from '../state/books-paged.feature';
-import { BooksPagedEvents } from '../state/books-paged.actions';
+import State from './state';
+import { BooksPageSize } from '../../../state';
 
 @Component({
-  selector: 'app-books-page-size-selector',
+  selector: 'books-page-size-selector',
   standalone: true,
   imports: [JsonPipe],
   template: `
@@ -24,9 +24,9 @@ import { BooksPagedEvents } from '../state/books-paged.actions';
 })
 export class BooksPageSizeSelectorComponent {
   #store = inject(Store);
-  options = this.#store.selectSignal(BooksPagedFeature.selectPageSizeOptions);
-  currentSize = this.#store.selectSignal(BooksPagedFeature.selectPageSize);
+  options = this.#store.selectSignal(State.selectPageSizeOptions);
+  currentSize = this.#store.selectSignal(State.selectPageSize);
   setPageSize(size: BooksPageSize) {
-    this.#store.dispatch(BooksPagedEvents.pageSizeSetTo({ payload: size }));
+    this.#store.dispatch(State.pageSizeSetTo({ payload: size }));
   }
 }

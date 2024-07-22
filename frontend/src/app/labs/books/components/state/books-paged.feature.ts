@@ -1,10 +1,7 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
-import { BooksSortedFeature } from './books-sorted.feature';
 import { BooksPagedEvents } from './books-paged.actions';
-
-const ALL_PAGE_SIZES = ['all', 50, 25, 15, 10, 5] as const;
-
-export type BooksPageSize = (typeof ALL_PAGE_SIZES)[number];
+import { selectSortedBooks } from '../../state';
+import { ALL_PAGE_SIZES, BooksPageSize } from '.';
 
 type BooksPagedState = { pageSize: BooksPageSize; currentPage: number };
 
@@ -22,14 +19,14 @@ export const BooksPagedFeature = createFeature({
       ...s,
       currentPage: s.currentPage + 1,
     })),
-    on(BooksPagedEvents.prviousPageRequested, s => ({
+    on(BooksPagedEvents.previousPageRequested, s => ({
       ...s,
       currentPage: s.currentPage - 1,
     }))
   ),
   extraSelectors: ({ selectCurrentPage, selectPageSize }) => {
     const selectPagedBooks = createSelector(
-      BooksSortedFeature.selectSortedBooks,
+      selectSortedBooks,
       selectCurrentPage,
       selectPageSize,
       (books, currentPage, pageSize) => {
@@ -49,7 +46,7 @@ export const BooksPagedFeature = createFeature({
     const selectPageSummary = createSelector(
       selectCurrentPage,
       selectPageSize,
-      BooksSortedFeature.selectSortedBooks,
+      selectSortedBooks,
       (current, size, { length }) => {
         let num: number = 1;
         if (size !== 'all') {

@@ -1,15 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BookListSelectors } from '../state';
-import { BooksListHeaderSortComponent } from './books-list-header-sort.component';
-import { BooksPagerComponent } from './books-pager.component';
+import { BooksListHeaderSortComponent } from './components/books-list-header-sort.component';
+import State from './state';
 
 @Component({
-  selector: 'app-book-list',
+  selector: 'book-list',
   standalone: true,
-  imports: [BooksListHeaderSortComponent, BooksPagerComponent],
+  imports: [BooksListHeaderSortComponent],
   template: ` <div class="overflow-x-auto h-svh max-h-full">
-    <table class="table table-zebra table-pin-rows ">
+    <table
+      class="table table-zebra table-pin-rows dark: bg-slate-800 p-4 mt-4 drop-shadow-lg">
       <thead>
         <td><app-books-list-header-sort key="id" /></td>
         <td><app-books-list-header-sort key="title" /></td>
@@ -44,5 +44,5 @@ import { BooksPagerComponent } from './books-pager.component';
 })
 export class BookListComponent {
   #store = inject(Store);
-  books = this.#store.selectSignal(BookListSelectors.selectBookList);
+  books = this.#store.selectSignal(State.selectBookList);
 }

@@ -1,5 +1,9 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  PreloadAllModules,
+  provideRouter,
+  withPreloading,
+} from '@angular/router';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -14,7 +18,7 @@ import { UserFeature } from './state/user/user-feature';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(withInterceptors([navigationInterceptor])),
     provideStore(),
     provideState(UserFeature),

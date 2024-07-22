@@ -1,13 +1,8 @@
 import { NgClass, TitleCasePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
-import { BookSortkey } from '../../../state/books.feature';
 import { Store } from '@ngrx/store';
-import {
-  BooksSortedFeature,
-  SortDirection,
-} from '../state/books-sorted.feature';
-import { BookSortedEvents } from '../state/books-sorted.actions';
-
+import type { BookKeys, SortDirection } from '../state';
+import { ListHeaderState, ListHeaderState as State } from '../state';
 @Component({
   selector: 'app-books-list-header-sort',
   standalone: true,
@@ -39,14 +34,14 @@ import { BookSortedEvents } from '../state/books-sorted.actions';
   `,
 })
 export class BooksListHeaderSortComponent {
-  key = input.required<BookSortkey>();
+  key = input.required<BookKeys>();
   #store = inject(Store);
-  sortingBy = this.#store.selectSignal(BooksSortedFeature.selectSortingBy);
-  direction = this.#store.selectSignal(BooksSortedFeature.selectDirection);
+  sortingBy = this.#store.selectSignal(ListHeaderState.selectSortingBy);
+  direction = this.#store.selectSignal(ListHeaderState.selectSortDirection);
 
-  setSort(by: BookSortkey, direction: SortDirection) {
+  setSort(by: BookKeys, direction: SortDirection) {
     this.#store.dispatch(
-      BookSortedEvents.sortBySet({ payload: { sortingBy: by, direction } })
+      ListHeaderState.sortBySet({ payload: { sortingBy: by, direction } })
     );
   }
 }

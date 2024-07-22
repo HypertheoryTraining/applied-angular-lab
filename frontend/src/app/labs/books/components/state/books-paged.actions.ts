@@ -7,6 +7,6 @@ export const BooksPagedEvents = createActionGroup({
     'Page Size Set To': props<{ payload: BooksPageSize }>(),
 
     'Next Page Requested': emptyProps(),
-    'Prvious Page Requested': emptyProps(),
+    'Previous Page Requested': emptyProps(),
   },
 });
