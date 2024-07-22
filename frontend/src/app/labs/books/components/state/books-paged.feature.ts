@@ -3,7 +3,7 @@ import { BooksPagedEvents } from './books-paged.actions';
 import { selectSortedBooks } from '../../state';
 import { ALL_PAGE_SIZES, BooksPageSize } from '.';
 
-type BooksPagedState = { pageSize: BooksPageSize; currentPage: number };
+export type BooksPagedState = { pageSize: BooksPageSize; currentPage: number };
 
 const initialState: BooksPagedState = { pageSize: 15, currentPage: 0 };
 

@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { BooksPageSize } from './books-paged.feature';
+import { BooksPageSize } from '.';
 
 export const BooksPagedEvents = createActionGroup({
   source: 'Books Paged Events',
