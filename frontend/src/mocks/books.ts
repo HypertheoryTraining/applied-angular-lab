@@ -43,17 +43,7 @@ export default [
     year: -1700,
     id: '4',
   },
-  {
-    author: 'Unknown',
-    country: 'Achaemenid Empire',
-    imageLink: 'images/the-book-of-job.jpg',
-    language: 'Hebrew',
-    link: 'https://en.wikipedia.org/wiki/Book_of_Job\n',
-    pages: 176,
-    title: 'The Book Of Job',
-    year: -600,
-    id: '5',
-  },
+
   {
     author: 'Unknown',
     country: 'India/Iran/Iraq/Egypt/Tajikistan',
