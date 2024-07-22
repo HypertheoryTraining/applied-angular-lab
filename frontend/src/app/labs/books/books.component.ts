@@ -16,11 +16,7 @@ import { BooksSourceCommands } from './state/books/books-source/books-source.act
     BooksPagerComponent,
     PagingComponent,
   ],
-  template: `
-    <p>Books</p>
-    <books-paging />
-    <book-list />
-  `,
+  template: ` <book-list /> `,
   styles: ``,
 })
 export class BooksComponent {

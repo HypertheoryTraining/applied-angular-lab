@@ -12,7 +12,7 @@ import { ListHeaderState, ListHeaderState as State } from '../state';
     @let next = d === 'asc' ? 'desc' : 'asc';
     <button
       (click)="setSort(key(), next)"
-      class="btn btn-link "
+      class="btn  join-item "
       [ngClass]="{
         sort: sortingBy() === key(),
         'sort-asc': d === 'asc',
